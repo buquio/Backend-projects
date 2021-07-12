@@ -1,0 +1,110 @@
+1.Create a folder in your system.
+2.Open the folder in your terminal.
+3.Run npm init -y command to initialize your NodeJs application in that directory.
+4.Run npm install express in the same directory to install the express framework for your app.
+5.Then open the folder in your code editor.
+6.Create a file and save it as server.js this file will contain the script to run your server.
+7.In the server.js file, include the express module with the require() function and call the function
+//jshint esversion:6
+
+const express = require("express");
+const bodyParser = require("body-parser");
+const ejs = require("ejs");
+const mongoose = require('mongoose');
+
+const app = express();
+
+app.set('view engine', 'ejs');
+
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(express.static("public"));
+
+//TODO
+
+app.listen(3000, function() {
+  console.log("Server started on port 3000");
+});
+
+
+COPY
+8.Next, set your app to listen on a port 3000
+app.listen(3000);
+
+COPY
+9.Install a package called nodemon as a dev dependency for your app that allows your server to restart automatically 
+when changes are made to your app, with this command
+ npm install --save-dev nodemon
+10.Next, in your package.json file, go to the scripts section and add the devStart key and nodemon with the server.js file as value that tells your server to start your app with nodemon
+"devStart": "nodemon server.js"
+
+COPY
+11.Next, start your server by running npm run devStart in your terminal.
+-Your server starts running but returns nothing.
+
+12.Now let's create routes and start making requests to the server.
+-Your app requires that users login with their username and password
+
+13.In the server.js file, create an array called users which represents your database that contains the credentials of your users as an object of username and password. This array of objects would contain the credentials of the users.
+const users = [
+  {
+      username: "Jordan",
+      password: "jordan123"
+  },
+  {
+      username: "kate",
+      password: "kate1234"
+  }
+];
+
+COPY
+14.Next, create a route to this users JSON object using a GET request that responds with the users JSON object. To enable the use of JSON objects in your app, add the express.json() middleware with app.use to your server.js file.
+app.use(express.json());
+
+app.get('/users', (req, res) => {
+    res.status(200).send(users);
+});
+
+COPY
+15.To test this request, we will be using postman which can be downloaded from (https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop//%40).
+Your server is still running, so you do not have to restart your server because you have nodemon installed.
+Go to postman and on the drop down to the left, choose GET and set your url to http://localhost/3000/users and click on the Send button to send the request. You should get a response of the users object.
+nodeauth postman.png
+The passwords of the users are in plain text in the database which means anyone that gains access to your database can have access to all the passwords of your users and be able to do anything with it. 
+To avoid this we use hashing which can be achieved by a library called bcrypt.
+
+16.HASHING PASSWORDS WITH BCRYPT
+There is a process of hiding the passwords for security reasons from been seen by anyone who gains access to ur database
+Bycrpt is a library designed for hashing passwords by combining a salt with the hashed password. 
+A salt is random data that is used as an additional input to a one-way function that hashes data.
+
+17.So in your app, install the bcrypt library with npm install bcrypt. 
+118.After it's done installing, include it in your server.js file with the require() function
+
+const bcrypt = require('bcrypt');
+
+COPY
+Using bcrypt requires two steps:
+
+Create a salt
+Then use the salt along with the password to create a hashed password.
+To implement this, we need to create a route. So create a POST request to the users route.
+
+app.post('/users', (req, res) => {}
+
+COPY
+Delete the objects in the users array in servers.js file and set it to an empty array. 
+When you use the POST request, you will create a user that will be added to the empty array(the database).
+
+So in your route handler for the POST request to the '/users route, create a user
+
+app.post('/users', (req, res) => {
+    const user = { name: req.body.name, password: req.body.password };
+    users.push[user];
+    res.status(200).send(users);
+});
+
+COPY
+While your server is still running, go to postman and make this post request to this route http://localhost:3000/users, set the type of request to JSON(application/json) 
+and in the body of the request include the JSON object of the name and password of the user.
