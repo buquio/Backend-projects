@@ -13,6 +13,7 @@ const createRental = async (req, res, next) => {
   }
 };
 
+
 const getRentals = async (req, res, next) => {
   try {
     const result = await Rentals.find({});
@@ -30,6 +31,8 @@ const getRentals = async (req, res, next) => {
  * @param {object} next - next middleware
  * @returns {object} custom response
 */
+
+
 const getRentalsByUserId = async (req, res, next) => {
   try {
     const userId = req.user._id;

@@ -12,16 +12,16 @@ const { successResponse, errorResponse } = require( '../utils/response');
 // signup
 const createUser = async (req, res, next) => {
   try {
-    const data = req.body;
+    const data = req.body; //newpassword
     const {username, email }= req.body;
-
+//to signup first see if the username does not exit before
     const user = await Users.findOne({username, email});
     if (user) return errorResponse(res, 409, 'User already exists'); 
-
+//save and hash the new password
     const salt = await (0, genSalt)(10);
     const newPassword = await hash(data.password, salt);
     data.password = newPassword;
-
+//create user by storing the username,email & pwd and generate token(unique number)
     const result = await Users.create(data);    
     const token = await generateToken({_id:result._id, username});
     
@@ -31,6 +31,8 @@ const createUser = async (req, res, next) => {
   }
 };
 
+
+//login
 const login = async (req, res, next) => {
   const data = req.body;
   const {username} = req.body;

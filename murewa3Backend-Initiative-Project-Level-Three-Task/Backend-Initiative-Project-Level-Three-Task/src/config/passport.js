@@ -4,6 +4,7 @@ const Fs = require('passport-facebook');
 const FacebookStrategy = Fs.Strategy;
 dotenv.config();
 
+//to get access to facebook authorization
 passport.serializeUser((user, done) => {
   done(null, user);
 });

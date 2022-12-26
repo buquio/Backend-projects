@@ -15,11 +15,7 @@ router.get('/facebook/redirect',
 
 router.post('/login', Validation.login, User.login);
 router.get('/all', Auth, User.getUser);
-router
-    .post('/', Validation.createUser, User.createUser)
-    .get('/', Auth, User.getUserById)
-    .patch('/', Auth, Validation.updateUser, User.updateUser)
-    .delete('/', Auth, User.deleteUser);
+router.post('/', Validation.createUser, User.createUser).get('/', Auth, User.getUserById).patch('/', Auth, Validation.updateUser, User.updateUser).delete('/', Auth, User.deleteUser);
 
 router.post('/password/reset',Validation.forgotPassword, User.forgotPassword);
 router.put('/password/reset/:resetToken', Validation.resetPassword, User.resetPassword);

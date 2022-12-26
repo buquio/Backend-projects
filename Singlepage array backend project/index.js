@@ -59,12 +59,14 @@ const movies = [
         ]
 
 //////AUTHENTICATION////////////////////////
-// authentication- used to verify a user in the client-side trying to access the database or the site.
+// authentication- used to verify(token)a user in the client-side trying to access the database or the site.
 // the server uses the user's information like the username and password 
 // When a User logs in, the server creates a session for the user & stores it in the memory with an  id called session id 
 // When the User makes a request to the server, the request is sent along with the cookie+ssession id 
-// The server then checks the session id and compares it with the session information saved in its memory. 
+// The server then checks the session id]]] and compares it with the session information saved in its memory. 
 // After the verification is completed by the server, the server responds with the data to the User.
+
+
 // Next, start your server by running -npm run devStart in your terminal.
 // Your server starts running,it will show "server listening on port 3000"
 
@@ -73,6 +75,8 @@ const movies = [
 app.get('/', (req, res) => { 
     res.send("Welcome");  //response with welcome on the home page
 });
+
+
 //CREATE USERS ENDPOINT + GET REQUEST TO SEE ALL USERS
 //create a route to users array-object using a GET&convert to json using app.use(express.json()) 
 app.get('/users',  authenticateToken, (req, res) => { 
@@ -84,8 +88,7 @@ app.get('/users',  authenticateToken, (req, res) => {
 // TESTING THE GET REQUEST 
 // To test this request, we will be using postman & NO LOGIN ROUTE YET that will encrpt password
 // Your server is still running, so you do not have to restart your server because you have nodemon installed.
-// Go to postman and on the drop down to the left, choose GET and set your url to http://localhost/3000/ -root route  
-// http://localhost/3000/users -users route
+// Go to postman and on the drop down to the left, choose GET and set your url to http://localhost/3000/users -users route
 // click on the Send button to send the request--You should get a response of the users object.
 
 //USERS ENDPOINT + GET REQUEST TO SEE A SPECIFIC USER OBJ+ AUTHORISATION using username
@@ -187,6 +190,7 @@ app.get('/movies', authenticateToken, (req, res) => {
     // response.status(200).send(users);
 });
 
+// GET MOVIES
 //returns 1 movie object using title parameter e.g {"title" : "24"} + authentication
 app.get('/moviesTitle', authenticateToken, (req, res) => {
     const title = req.body.title;
@@ -200,6 +204,7 @@ app.get('/moviesTitle', authenticateToken, (req, res) => {
     res.status(200).json(movie);
 });
 
+// POST MOVIES
 app.post('/movies', (req, res) => {
     const movies = { 
         username: req.body.username, 
@@ -214,7 +219,7 @@ app.post('/movies', (req, res) => {
     res.status(201).send(movies);
 });
 
-// UPDATE
+// UPDATE MOVIES
 // this api end-point update an existing movie object
 // for that we get `title` from end-point of movies to update
 app.put('/movies', authenticateToken, (req, res) => { 
@@ -246,7 +251,7 @@ app.put('/movies', authenticateToken, (req, res) => {
 });
 
 
-// DELETE
+// DELETE MOVIES
 // this api end-point delete an existing item object from
 // array of movie, match by movietitle find item and then delete
 app.delete('/movies', authenticateToken, (req, res) => { 
