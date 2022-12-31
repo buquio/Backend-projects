@@ -58,55 +58,8 @@ const movies = [
            }
         ]
 
-//////AUTHENTICATION////////////////////////
-// authentication- used to verify(token)a user in the client-side trying to access the database or the site.
-// the server uses the user's information like the username and password 
-// When a User logs in, the server creates a session for the user & stores it in the memory with an  id called session id 
-// When the User makes a request to the server, the request is sent along with the cookie+ssession id 
-// The server then checks the session id]]] and compares it with the session information saved in its memory. 
-// After the verification is completed by the server, the server responds with the data to the User.
 
-
-// Next, start your server by running -npm run devStart in your terminal.
-// Your server starts running,it will show "server listening on port 3000"
-
-//CREATE ROOT ENDPOINT +GET REQUEST///////////////////////
-//create a route to root-users-route. 
-app.get('/', (req, res) => { 
-    res.send("Welcome");  //response with welcome on the home page
-});
-
-
-//CREATE USERS ENDPOINT + GET REQUEST TO SEE ALL USERS
-//create a route to users array-object using a GET&convert to json using app.use(express.json()) 
-app.get('/users',  authenticateToken, (req, res) => { 
-    res.send(users);  //response with all the user
-    // or 
-    // response.status(200).send(users);
-});
-
-// TESTING THE GET REQUEST 
-// To test this request, we will be using postman & NO LOGIN ROUTE YET that will encrpt password
-// Your server is still running, so you do not have to restart your server because you have nodemon installed.
-// Go to postman and on the drop down to the left, choose GET and set your url to http://localhost/3000/users -users route
-// click on the Send button to send the request--You should get a response of the users object.
-
-//USERS ENDPOINT + GET REQUEST TO SEE A SPECIFIC USER OBJ+ AUTHORISATION using username
- app.get('/users', authenticateToken, (req, res) => {
-    // const {name} = req.user;
-    const username = req.body.username;//i.e username of 1 of the user inside the user array
-    
-    // const rentalUser = rentals.filter(rental => rentals.name === name);
-    const userName = users.filter(user => user.username === username);
-
-    if(!userName) {
-        return res.send("Username are not allowed");    
-    }
-    res.json(userName);
-});
-
-
-//USERS ENDPOINT + POST REQUEST + NO PASSWORD ENCRPT + NO AUTHENTICATION
+/////USERS ENDPOINT + POST REQUEST + NO PASSWORD ENCRPT + NO AUTHENTICATION
 //create a route to users array-object using a POST& post to users using .push
 //To input the value of the users on postman
 //set the above array to empty after testing or leave it and add new username& password thru postman
@@ -129,7 +82,57 @@ app.post('/users', (req, res) => {
 
 // The passwords of the users are in plain text in the database which means anyone that gains access to your database
 // can have access to all the passwords of your users and be able to do anything with it. 
-// To avoid this we use hashing which can be achieved by a library called bcrypt.
+// To avoid this we use hashing which can be achieved by a library called bcrypt.SEE BELOW
+
+
+//////AUTHENTICATION --USER TRYING TO GET INFO FROM DATABASE ////////////////////////
+// authentication- used to verify(token)a user in the client-side trying to access the database or the site.
+// the server uses the user's information like the username and password 
+// When a User logs in, the server creates a session for the user & stores it in the memory with an  id called session id 
+// When the User makes a request to the server, the request is sent along with the cookie+ssession id 
+// The server then checks the session id]]] and compares it with the session information saved in its memory. 
+// After the verification is completed by the server, the server responds with the data to the User.
+
+
+// Next, start your server by running -npm run devStart in your terminal.
+// Your server starts running,it will show "server listening on port 3000"
+
+//CREATE ROOT ENDPOINT +GET REQUEST///////////////////////
+//create a route; root-route. 
+app.get('/', (req, res) => { 
+    res.send("Welcome");  //response with welcome on the home page
+});
+
+
+//CREATE USERS ENDPOINT + GET REQUEST TO SEE ALL USERS
+//create a route to users array-object using a GET&convert to json using app.use(express.json()) 
+app.get('/users',  authenticateToken, (req, res) => { 
+    res.send(users);  //response with all the user
+    // or 
+    // response.status(200).send(users);
+});
+
+// TESTING THE GET REQUEST 
+// To test this request, we will be using postman & NO LOGIN ROUTE YET that add user & will encrpt userpassword
+// Your server is still running, so you do not have to restart your server because you have nodemon installed.
+// Go to postman and on the drop down to the left, choose GET and set your url to http://localhost/3000/users -users route
+// click on the Send button to send the request--You should get a response of the users object.
+
+//USERS ENDPOINT + GET REQUEST TO SEE A SPECIFIC USER OBJ+ AUTHORISATION using username
+ app.get('/users', authenticateToken, (req, res) => {
+    // const {name} = req.user;
+    const username = req.body.username;//i.e username of 1 of the user inside the user array
+    
+    // const rentalUser = rentals.filter(rental => rentals.name === name);
+    const userName = users.filter(user => user.username === username);
+
+    if(!userName) {
+        return res.send("Username are not allowed");    
+    }
+    res.json(userName);
+});
+
+
 
 // UPDATE
 // this api end-point update an existing users object

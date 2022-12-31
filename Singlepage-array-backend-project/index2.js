@@ -56,12 +56,27 @@ const movies = [
             "returnDate":"20/7/20"
            }
         ]
+
+
+app.post('/users', (req, res) => {
+    const user = { 
+                username: req.body.username, 
+                password: req.body.password 
+            };
+            users.push(user);
+            res.status(201).send(users);
+        });
+
+        
 app.get('/', (req, res) => { 
     res.send("Welcome");  
 });
+
+
 app.get('/users',  authenticateToken, (req, res) => { 
     res.send(users);  
 });
+
 
  app.get('/users', authenticateToken, (req, res) => {
     const username = req.body.username;//i.e username of 1 of the user inside the user array
@@ -73,14 +88,6 @@ app.get('/users',  authenticateToken, (req, res) => {
 });
 
 
-app.post('/users', (req, res) => {
-    const user = { 
-        username: req.body.username, 
-        password: req.body.password 
-    };
-    users.push(user);
-    res.status(201).send(users);
-});
 
 app.put('/users', authenticateToken, (req, res) => { 
     let updated;
