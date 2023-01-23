@@ -40,6 +40,7 @@ app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
 
+
 //Global handler
 app.use('*', (req, res)=>{
   return errorResponse(res, 404, 'This endpoint does not exist');
