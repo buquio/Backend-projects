@@ -29,7 +29,7 @@ app.listen(3000, function() {
 
 
 COPY
-8.Next, set your app to listen on a port 3000
+8.Next, set your app to listen on a port 3000 (already included above)
 app.listen(3000);
 
 COPY
@@ -40,7 +40,9 @@ when changes are made to your app, with this command
 "devStart": "nodemon server.js"
 
 COPY
-11.Next, start your server by running npm run devStart in your terminal.
+11.Next, start your server by running 
+npm run devStart 
+in your terminal.
 -Your server starts running but returns nothing.
 
 12.Now let's create routes and start making requests to the server.
@@ -60,6 +62,7 @@ const users = [
 
 COPY
 14.Next, create a route to this users JSON object using a GET request that responds with the users JSON object. To enable the use of JSON objects in your app, add the express.json() middleware with app.use to your server.js file.
+
 app.use(express.json());
 
 app.get('/users', (req, res) => {
@@ -70,7 +73,9 @@ COPY
 15.To test this request, we will be using postman which can be downloaded from https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop//%40
 Your server is still running, so you do not have to restart your server because you have nodemon installed.
 
-///Go to postman and on the drop down to the left, choose GET and set your url to http://localhost/3000/users and click on the Send button to send the request. You should get a response of the users object.
+///Go to postman and on the drop down to the left, choose GET and set your url to 
+http://localhost/3000/users 
+and click on the Send button to send the request. You should get a response of the users object.
 nodeauth postman.png
 The passwords of the users are in plain text in the database which means anyone that gains access to your database can have access to all the passwords of your users and be able to do anything with it. 
 To avoid this we use hashing which can be achieved by a library called bcrypt.

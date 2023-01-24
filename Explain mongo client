@@ -1,0 +1,33 @@
+Basic information about the mongo client
+The mongo client is a command line JavaScript client for connecting to, controlling, and interacting with MongoDB database servers. 
+
+ FOR clarity's sake, we'll differentiate between local and remote connections:
+
+A. local connection: a connection where the client and the MongoDB instance are located on the same server
+You can connect to a local MongoDB server running with its default configuration by typing; First without providing credentials:
+
+mongo
+
+On a successful connection, you will likely see a fairly long set of messages followed by a MongoDB shell prompt:
+
+ MongoDB shell version v4.4.6
+ connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+ Implicit session: session { "id" : UUID("9cf2d126-d25f-4ed8-b159-ef3bba4fcc53") }
+ MongoDB server version: 4.4.6
+
+ If you are connecting to a local MongoDB server that has been configured with access control, you will need
+ mongo --username <mongo_username> --password
+You can also provide this information by passing a connection string instead 
+mongo "mongodb://<mongo_username>:@127.0.0.1"
+
+
+B. remote connection: where the client is connecting to a network-accessible MongoDB instance running on a different computer
+If you want to connect to a remote MongoDB database, you'll have to provide some additional details when using the mongo shell.
+
+Specifically, you'll need to include the --host option and potentially the --port option as well if the MongoDB server is listening on a non-default port. In almost all cases, you'll also need to provide the --user and --password options to authenticate to the remote server too.
+
+mongo --host <mongo_server_address> --port <mongo_server_port> --user <mongo_username> --password
+
+You can also provide this information by passing a connection string instead 
+mongo "mongodb://<mongo_username>:@<mongo_server_address>:<mongo_server_port>"
+

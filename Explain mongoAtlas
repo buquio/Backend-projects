@@ -1,0 +1,40 @@
+
+mongodb atlas
+https://www.youtube.com/watch?v=bhiEJW5poHU
+
+npm init
+fill the desc,entry pt,lic,git repo,author
+click enter
+npm install express mongoose --save
+creat server.js file
+ require express etc ....
+
+copy the uri and connect
+
+write fxn to connect
+
+run     node server
+
+
+////////////////
+mongodb compass and mongo shell tutorial
+https://www.youtube.com/watch?v=RpJNRQSpLXQ
+
+HOW TO SET MONGODB IN ENVIRON VARIABLE
+go to Local Dick C
+then go to Program files
+then selcect mongoDB
+then search in till you get to bin folder
+then copy the address in the address bar
+then search for environ in computer search bar
+
+then run mongo --version
+(this will show that the mongo shell is installed)
+
+
+then run mongod --version
+(this will show that the mongo db is installed)
+
+then run mongo
+
+
