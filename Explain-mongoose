@@ -1,3 +1,7 @@
+you can connect with your project using mongoclient or mongoose or mongodb Atlas or mongodb compass
+
+you can show your result with postman or mongo powershell or mongodb Atlas(mongo vs extension) or mongodb compass(graphic interphase)
+
 //////////////////////////
 How to Connect MongoDB to Node.js Using Mongoose
 

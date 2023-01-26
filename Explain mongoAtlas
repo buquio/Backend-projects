@@ -14,6 +14,13 @@ copy the uri and connect
 write fxn to connect
 
 run     node server
+//////////////////////
+
+
+mongodb atlas
+
+https://www.youtube.com/watch?v=11phu1pEJm4
+
 
 
 ////////////////
@@ -36,5 +43,7 @@ then run mongod --version
 (this will show that the mongo db is installed)
 
 then run mongo
+(this will show the mongo shell )
+
 
 
