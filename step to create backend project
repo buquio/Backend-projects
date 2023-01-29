@@ -1,3 +1,4 @@
+SIMPLE BACKEND PROJECT NO DATABASE CONNECTION
 1.Create a folder in your system.
 2.Open the folder in your terminal.
 3.Run npm init -y command to initialize your NodeJs application in that directory.
@@ -100,8 +101,8 @@ To implement this, we need to create a route. So create a POST request to the us
 app.post('/users', (req, res) => {}
 
 COPY
-Delete the objects in the users array in servers.js file and set it to an empty array. 
-When you use the POST request, you will create a user that will be added to the empty array(the database).
+You can Delete the objects in the users array in servers.js file and set it to an empty array. 
+Also When you use the POST request, you will create a user that will be added to the empty array(the database).
 
 So in your route handler for the POST request to the '/users route, create a user
 
@@ -111,6 +112,8 @@ app.post('/users', (req, res) => {
     res.status(200).send(users);
 });
 
-COPY
-While your server is still running, go to postman and make this post request to this route http://localhost:3000/users, set the type of request to JSON(application/json) 
-and in the body of the request include the JSON object of the name and password of the user.
+COPY  To post a user: 
+While your server is still running, go to postman and 
+-make this post request to this route http://localhost:3000/users, 
+-select body, click raw then set the type of request from text to JSON(application/json) 
+-in the body of the request include the JSON object of the name and password of the user.

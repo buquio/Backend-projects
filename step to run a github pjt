@@ -1,0 +1,23 @@
+for a backend project you just downloaded from github(with no database connection but you can test on postman) 
+
+-first navagate to that particular project e.g cd Singlepage-array-backend-project
+-do   npm install (this will add node_modules with all needed dev folders)
+-then  npm install --save-dev nodemon
+-next in your package.json file, under scripts add 
+"devStart": "nodemon server.js"
+-then npm run devStart 
+  it will show Server listening on port 3000
+
+-YOU can then test on postman--POST REQUEST
+While your server is still running, go to postman and 
+-make this post request to this route http://localhost:3000/users
+-select body click raw then set the type of request from text to JSON(application/json) 
+-in the body of the request include the JSON object of the name, email and password of the user.
+e.g 
+{
+    
+        "username": "eniolade",
+        "password": "niolade 555",
+        "email": "toyin@gmail.com"
+
+    }

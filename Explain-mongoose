@@ -1,37 +1,26 @@
-you can connect with your project using mongoclient or mongoose or mongodb Atlas or mongodb compass
-
-you can show your result with postman or mongo powershell or mongodb Atlas(mongo vs extension) or mongodb compass(graphic interphase)
+YOU CAN CONNECT your project using mongoclient or mongoose AND SHOW YOUR RESULT ON mongodb Atlas or mongodb compass or postman or terminal using console.log
+Mongoose can be used to connect to both MongoDB and MongoDB Atlas to your Node.js app.
 
 //////////////////////////
 How to Connect MongoDB to Node.js Using Mongoose
 
-Mongoose.js connects your MongoDB clusters or collections with your Node.js app. It enables you to create schemas for your documents. Mongoose provides a lot of functionality when creating and working with schemas.
-
-In this tutorial we will look at how to connect a "empty MongoDB instance" with a Node.js application.
-
-MongoDB is one of the most widely used No-SQL databases in the developer world today. No-SQL databases allow developers to send and retrieve data as JSON documents, instead of SQL objects. To work with MongoDB in a Node.js app, we can use Mongoose.
-
-Prerequisites
-Before we move on, you’ll need to have the following:
+Mongoose.js connects your MongoDB clusters or collections with your Node.js app. It enables you to create schemas for your documents. 
 
 Node.js installed on your machine.
-A MongoDB instance running on your machine. You won’t need this if you want to use MongoDB Atlas.
-Some knowledge of Node.js and Express.js.
-Step 1 - Installing Mongoose on a Node.js environment
-Create and navigate to a new folder by running the following commands on a terminal.
+A MongoDB instance running on your machine. ut not needed if you use MongoDB Atlas.(atlas is in the cloud)
 
+Step 1 - Installing Mongoose on a Node.js environment
+Create a new folder on a terminal.
 $ mkdir mongoose_tutorial
 $ cd mongoose_tutorial
 Then install Express and Mongoose by executing the following command on a terminal.
-
 $ npm install express mongoose --save
+
 If you are using Yarn, run:
-
 $ yarn add express mongoose
-Step 2 – Creating the connection
-Create a new file server.js to start our Express.js server. Load mongoose and express by adding the following code to server.js.
 
-server.js
+Step 2 – Creating the connection
+Create a new file server.js to start our Express.js server by adding the following code to server.js.
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -42,8 +31,6 @@ const app = express();
 app.use(express.json());
 Then connect to a local MongoDB instance using the mongoose.connect() function.
 
-server.js
-
 mongoose.connect('mongodb://localhost:27017/usersdb',
   {
     useNewUrlParser: true,
@@ -52,46 +39,7 @@ mongoose.connect('mongodb://localhost:27017/usersdb',
   }
 );
 We pass the useNewUrlParser: true, etc. to mongoose.connect() to avoid the DeprecationWarning.
-
-
-
-????????????????????//
-To create a connection to MongoDB Atlas, follow the next steps.
-
-Open your Cluster tab in MongoDb Atlas and click CONNECT.
-Connect to cluster
-
-Select Connect your application and choose Node.js for the driver.
-Copy the connection string.
-
-With the connection at hand, create the following variables and replace their values using your actual credentials.
-
-server.js
-
-const username = "<mongodb username>";
-const password = "<password>";
-const cluster = "<cluster name>";
-const dbname = "myFirstDatabase";
-
-mongoose.connect(
-  `mongodb+srv://${username}:${password}@${cluster}.mongodb.net/${dbname}?retryWrites=true&w=majority`, 
-  {
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true
-  }
-);
-It’s important to note that the cluster variable is the values appearing between the @ and .mongodb.net. In my case the cluster variable is cluster0.vte2d.
-???????????????????????//   https://stackoverflow.com/questions/68958221/mongoparseerror-options-usecreateindex-usefindandmodify-are-not-supported
-
-useNewUrlParser, useUnifiedTopology, useFindAndModify, and useCreateIndex are no longer supported options. Mongoose 6 always behaves as if useNewUrlParser, useUnifiedTopology, and useCreateIndex are true, and useFindAndModify is false. Please remove these options from your code.
-
-
-
-
 To make sure your connection was successful, add the following code right below your mongoose.connect().
-
-server.js
 
 // ...
 const db = mongoose.connection;
@@ -100,13 +48,8 @@ db.once("open", function () {
   console.log("Connected successfully");
 });
 
-Then, set the app to listen to port 3000.
-
-server.js
-
 // ...
 app.use(Router);
-
 app.listen(3000, () => {
   console.log("Server is running at port 3000");
 });
@@ -114,13 +57,11 @@ We will create the Router later.
 
 ////////Make sure to add app.use(express.json()); before app.use(Router); and that should allow your node app to correctly pull the request.body values
 
-
+CONTINUED
+/////////////////////
 Step 3 – Creating the schema
 Now let’s define a collection schema for our application.
-
 Create another file models.js and add the following code.
-
-models.js
 
 const mongoose = require("mongoose");
 
@@ -139,22 +80,18 @@ const User = mongoose.model("User", UserSchema);
 
 module.exports = User;
 We create a schema UserSchema using the mongoose.Schema() method. The schema collects the name and age fields sent from the request.
-
 We then export the schema using the last 2 lines.
 
+///////////////////
 Step 4 – Creating the POST endpoint
 Create a new file routes.js. This file defines the endpoints for our app.
 
-Load express and the schema we created in Step 3 by adding the following code.
-
-routes.js
+Load express and the schema we created in Step 3 by adding the following code inside routes.js
 
 const express = require("express");
 const userModel = require("./models");
 const app = express();
 Then create the POST endpoint by adding the following code.
-
-routes.js
 
 // ...
 app.post("/add_user", async (request, response) => {
@@ -168,13 +105,11 @@ app.post("/add_user", async (request, response) => {
     }
 });
 We create a route /add_user to add a new user to the database. We parse the content to be saved to the database using the line const user = new userModel(request.body);.
-
 We then use a try/catch block to save the object to the database using the .save() method.
 
+///////////
 Step 5 – Creating the GET endpoint
 Add the following lines of code to the routes.js file.
-
-routes.js
 
 // ...
 app.get("/users", async (request, response) => {
@@ -196,35 +131,149 @@ routes.js
 module.exports = app;
 At this point, your application is ready. Serve the app by running the command below.
 
-Step 6 – running the Server
-
-$ node server.js
-
 //////////////////
-OR 
+Step 6 – running the Server
+$ node server.js
+OR install -  npm install --save-dev nodemon
+            - next in your package.json file, under scripts add
+"scripts" :{
+  "devStart":"nodemoon server.js"
+}
+
 npm run devStart
  
-"scripts" :{
-    "devStart":"nodemoon server.js"
-}
 /////////////////////
-
 Step 7 – Testing the endpoints
 Now, let’s test the two endpoints we created above.
 
 Open Postman and make a POST request to the http://localhost:3000/add_user endpoint.
 
 test 1 -Add user to database
-
 A new user is added to the database. You can check your collections to confirm this.?????????????
 
 test 2 -GET all users
 Make a GET request to the http://localhost:3000/users endpoint.
+The endpoint returns a list of all the users added to the database. 
 
 
-The endpoint returns a list of all the users added to the database. You can check your collections to confirm this.?????????????
+////////////////////////////////////////////
+YOU CAN SHOW YOUR RESULT ON
+1.vscode terminal using console.log or
+2.postman or 
+3.mongo powershell or 
+4.mongodb Atlas(mongo vs extension) or
+5.mongodb compass(graphic interphase)
 
-Conclusion
-In this tutorial, we have looked at how to set up Mongoose. We have also looked at how to establish a database connection and how to create a schema for our collections. Mongoose can be used to connect to both MongoDB and MongoDB Atlas to your Node.js app.
+1.vscode terminal using console.log 
+// npm install
+// install nodemon  npm install --save-dev nodemon
+// run using npm start   OR node app.js
+
+2.postman or 
+YOU can then test on postman--GET/POST REQUEST
+While your server is still running, go to postman and 
+-make this GET/POST request to this route http://localhost:3000/users
+-select body click raw then set the type of request from text to JSON(application/json) 
+-FOR POST request,in the body of the request include the JSON object of the name, email and password of the user.
+{  
+        "username": "eniolade",
+        "password": "niolade 555",
+        "email": "toyin@gmail.com"
+
+    }
+
+
+3.mongo powershell or 
+-first install mongodb server
+-install mongo shell
+-//HOW TO CONNECT mongoDB and mongo SHELL 
+https://www.youtube.com/watch?v=oC6sKlhz0OE
+-you start mongodb(database server) typing mongod
+-you start mongo shell(mongo shell) typing mongosh
+NOTE: WHEN RUNNING MONGOSHELL YOU TYPE mongosh(new version)  not mongo
+mongo shell tutorial
+https://www.youtube.com/watch?v=RpJNRQSpLXQ
+
+// use bookshore
+// db.createCollection("students")
+// db.students.insertOne({"roleno":1, "name": "bukola"})
+// show collections
+// db.students.find()
+
+
+
+4.mongodb Atlas(mongo vs extension) or
+mongodb atlas
+https://www.youtube.com/watch?v=bhiEJW5poHU
+
+
+https://www.youtube.com/watch?v=11phu1pEJm4
+
+
+-To create a connection to MongoDB Atlas, follow the next steps.
+-Open your Cluster tab in MongoDb Atlas and click CONNECT.
+-Connect to cluster
+-Select Connect your application and choose Node.js for the driver.
+-Copy the connection string.
+-With the connection at hand, create the following variables and replace their values using your actual credentials inside server.js
+
+const username = "<mongodb username>";
+const password = "<password>";
+const cluster = "<cluster name>";
+const dbname = "myFirstDatabase";
+
+mongoose.connect(
+  `mongodb+srv://${username}:${password}@${cluster}.mongodb.net/${dbname}?retryWrites=true&w=majority`, 
+  {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true
+  }
+);
+It’s important to note that the cluster variable is the values appearing between the @ and .mongodb.net. In my case the cluster variable is cluster0.vte2d.
+   https://stackoverflow.com/questions/68958221/mongoparseerror-options-usecreateindex-usefindandmodify-are-not-supported
+   
+   ???????????????????????????????????????????????????????????????????????//
+
+NOTE:
+useNewUrlParser, useUnifiedTopology, useFindAndModify, and useCreateIndex are no longer supported options. Mongoose 6 always behaves as if useNewUrlParser, useUnifiedTopology, and useCreateIndex are true, and useFindAndModify is false. Please remove these options from your code.
+
+5.mongodb compass(graphic interphase)
+install mongodb compass 
+https://www.youtube.com/watch?v=bJSj1a84I20
+-search for compass on your computer
+-click connect 
+-see all your database connected to local 27107
+-see your collections and document
+-manage your database 
+how to use mongodb compass
+https://www.youtube.com/watch?v=6e6xrkUytJY
+
+
+
+
+HOW TO SET MONGODB IN ENVIRON VARIABLE
+go to Local Dick C
+then go to Program files
+then selcect mongoDB
+then search in till you get to bin folder
+then copy the address in the address bar
+then search for environ in computer search bar
+
+then run mongo --version
+(this will show that the mongo shell is installed)
+
+then run mongod --version
+(this will show that the mongo db is installed)
+
+then run mongosh
+(this will show the mongo shell is running)
+
+then run mongod
+(this will show that the mongo db is running)
+
+
+
+
 
 I
