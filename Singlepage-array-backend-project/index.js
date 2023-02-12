@@ -88,8 +88,8 @@ app.post('/users', (req, res) => {
 //////AUTHENTICATION --USER TRYING TO GET INFO FROM DATABASE ////////////////////////
 // authentication- used to verify(token)a user in the client-side trying to access the database or the site.
 // the server uses the user's information like the username and password 
-// When a User logs in, the server creates a session for the user & stores it in the memory with an  id called session id 
-// When the User makes a request to the server, the request is sent along with the cookie+ssession id 
+// When a User first sign up, the server creates a session for the user & stores it in the memory with an  id called session id 
+// When the User logs in to makes a request to the server, the request is sent along with the cookie+ssession id 
 // The server then checks the session id]]] and compares it with the session information saved in its memory. 
 // After the verification is completed by the server, the server responds with the data to the User.
 
@@ -105,7 +105,7 @@ app.get('/', (req, res) => {
 
 
 //CREATE USERS ENDPOINT + GET REQUEST TO SEE ALL USERS
-//create a route to users array-object using a GET&convert to json using app.use(express.json()) 
+//create a route to users array-object 
 app.get('/users',  authenticateToken, (req, res) => { 
     res.send(users);  //response with all the user
     // or 
@@ -127,7 +127,7 @@ app.get('/users',  authenticateToken, (req, res) => {
     const userName = users.filter(user => user.username === username);
 
     if(!userName) {
-        return res.send("Username are not allowed");    
+        return res.send("Username are not found/allowed");    
     }
     res.json(userName);
 });
@@ -278,6 +278,14 @@ app.delete('/movies', authenticateToken, (req, res) => {
 
  /////////////////////////
 //USERSSIGNUP ENDPOINT USING POST REQUEST + ENCRPT/HASHING THE PASSWORD =USERSCREATE
+//////AUTHENTICATION --USER TRYING TO GET INFO FROM DATABASE ////////////////////////
+// authentication- used to verify(token)a user in the client-side trying to access the database or the site.
+// the server uses the user's information like the username and password When a User first sign up, 
+//the server creates a session for the user & stores it in the memory with an  id called session id 
+// When the User logs in to makes a request to the server, the request is sent along with the cookie+ssession id 
+// The server then checks the session id]]] and compares it with the session information saved in its memory. 
+// After the verification is completed by the server, the server responds with the data to the User.
+
 //1.generate a salt using bcrypt in the route handler for the post request
 app.post('/usersSignup', async(req, res) => {
     console.log("I am getting here");
@@ -315,7 +323,7 @@ app.post('/usersSignup', async(req, res) => {
 // and see that your response for password is now hashed!
 
 // CREATE LOGIN ROUTE/ENDPOINT TO TEST ENCRPTED PASSWORD ONLY
-// next create login route to check/compare the user's information with which was created(authentication) 
+// next create login route to check/compare the user's information with one which was created at signup(authentication) 
 //1.first confirm if user exist, then
 //2.compare the password with the hashed password
 
@@ -342,7 +350,7 @@ app.post('/usersSignup', async(req, res) => {
 //     }
 // });
 // test the above code via postman,
-// create a user with the POST request to http://localhost:3000/users-first sign up.
+// create a user with the POST request to http://localhost:3000/usersSignup.
 // next, login the user with the POST request to http://localhost:3000/users/login 
 // After logging the user it responds with success  
 // because the username&password used to log in matches the hashed password that was created when the user was created.
