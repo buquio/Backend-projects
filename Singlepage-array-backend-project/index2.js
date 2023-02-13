@@ -3,6 +3,10 @@ const express = require('express');
 const app = express();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+
+// const dotenv = require('dotenv');
+// dotenv.config();
+
 app.use(express.json());//conf. middleware instead of bodyparser
 
 const users = [
@@ -58,6 +62,81 @@ const movies = [
         ]
 
 
+  //root route      
+app.get('/', (req, res) => { 
+    res.send("Welcome");  
+});
+
+////usersSignup
+app.post('/usersSignup', async(req, res) => {
+    console.log("I am getting here");
+    try {
+        let salt;
+        let hashedPassword;
+        bcrypt.genSalt(2, function(err,ensalt){
+            console.log(ensalt);
+            salt= ensalt;
+            
+        bcrypt.hash(req.body.password, ensalt, function(err, encrypted){
+                console.log("The hashed password is : " + encrypted);
+                hashedPassword = encrypted
+                const user = { username: req.body.username, password: hashedPassword };
+                users.push(user);
+                res.status(200).send(users);
+            });
+        });
+        console.log("This would return : " + hashedPassword)        
+        
+    } catch {
+        res.status(500).send();
+    }
+});
+
+/////users/login
+app.post('/users/login', async(req, res) => {
+    const user = users.find(user => user.username === req.body.username);
+    console.log("Got to the POST User/LOGIN");
+    if(user == null) {
+        return res.status(404).send("User does not exist");
+    } try {
+            bcrypt.compare(req.body.password, user.password, function(err, same){
+                if(err){
+                    console.log(err)
+                    res.status(500).send("Soemthing went wrong, please try again");
+                }
+                if(same){
+                    const username = req.body.username;
+                    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+                    res.json({ accessToken: accessToken });
+                }else{
+                    res.status(401).send("Username and Password Combination does not match")
+                }
+            })
+    } catch {
+        res.status(500).send("user not allowed");
+    }
+});
+
+
+/////authorization using authenticateToken
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'].split(' ')[1];
+    if (authHeader == null) {
+       return res.sendStatus(401);
+    }
+    jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+       if (err) {
+           console.log(err)
+           return res.sendStatus(403);
+       }
+       req.user = user;
+    
+       next();
+    });
+};
+
+
+//////users route
 app.post('/users', (req, res) => {
     const user = { 
                 username: req.body.username, 
@@ -67,18 +146,14 @@ app.post('/users', (req, res) => {
             res.status(201).send(users);
         });
 
-        
-app.get('/', (req, res) => { 
-    res.send("Welcome");  
-});
-
 
 app.get('/users',  authenticateToken, (req, res) => { 
-    res.send(users);  
+    res.send(users);  //get all users
+
 });
 
 
- app.get('/users', authenticateToken, (req, res) => {
+ app.get('/users', authenticateToken, (req, res) => { //get specific users
     const username = req.body.username;//i.e username of 1 of the user inside the user array
     const userName = users.filter(user => user.username === username);//new username
     if(!userName) {
@@ -125,6 +200,20 @@ app.delete('/users', authenticateToken, (req, res) => {
 
 
 // MOVIES 
+app.post('/movies', (req, res) => {  //admin
+    const movies = { 
+        username: req.body.username, 
+        password: req.body.password, 
+        title: req.body.title,
+        actor: req.body.actor,
+        producer: req.body.producer,
+        rating: req.body.rating
+    };
+    movies.push(movie);
+    res.status(201).send(movies);
+});
+
+
 app.get('/movies', authenticateToken, (req, res) => { 
     res.send(movies);  
 });
@@ -138,20 +227,7 @@ app.get('/moviesTitle', authenticateToken, (req, res) => {
     res.status(200).json(movie);
 });
 
-app.post('/movies', (req, res) => {
-    const movies = { 
-        username: req.body.username, 
-        password: req.body.password, 
-        title: req.body.title,
-        actor: req.body.actor,
-        producer: req.body.producer,
-        rating: req.body.rating
-    };
-    movies.push(movie);
-    res.status(201).send(movies);
-});
-
-app.put('/movies', authenticateToken, (req, res) => { 
+app.put('/movies', authenticateToken, (req, res) => { //admin
     let updated;
     let found = movies.find(function (movie) {
         return movie.title === req.body.title;
@@ -173,7 +249,7 @@ app.put('/movies', authenticateToken, (req, res) => {
 });
 
 
-app.delete('/movies', authenticateToken, (req, res) => { 
+app.delete('/movies', authenticateToken, (req, res) => { //admin
     let found = movies.find(movie => {
         return movie.title === req.body.title;
     });
@@ -187,57 +263,21 @@ app.delete('/movies', authenticateToken, (req, res) => {
 });
 
 
-app.post('/usersSignup', async(req, res) => {
-    console.log("I am getting here");
-    try {
-        let salt;
-        let hashedPassword;
-        bcrypt.genSalt(2, function(err,ensalt){
-            console.log(ensalt);
-            salt= ensalt;
-            
-        bcrypt.hash(req.body.password, ensalt, function(err, encrypted){
-                console.log("The hashed password is : " + encrypted);
-                hashedPassword = encrypted
-                const user = { username: req.body.username, password: hashedPassword };
-                users.push(user);
-                res.status(200).send(users);
-            });
-        });
-        console.log("This would return : " + hashedPassword)        
-        
-    } catch {
-        res.status(500).send();
-    }
-});
-
-
-app.post('/users/login', async(req, res) => {
-    const user = users.find(user => user.username === req.body.username);
-    console.log("Got to the POST User/LOGIN");
-    if(user == null) {
-        return res.status(404).send("User does not exist");
-    } try {
-            bcrypt.compare(req.body.password, user.password, function(err, same){
-                if(err){
-                    console.log(err)
-                    res.status(500).send("Soemthing went wrong, please try again");
-                }
-                if(same){
-                    const username = req.body.username;
-                    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-                    res.json({ accessToken: accessToken });
-                }else{
-                    res.status(401).send("Username and Password Combination does not match")
-                }
-            })
-    } catch {
-        res.status(500).send("user not allowed");
-    }
-});
-
 // RENTALS 
-app.get('/rentals', authenticateToken, (req, res) => { 
+app.post('/rentals', (req, res) => { //admin
+    const rentals = { 
+        username: req.body.username, 
+        receiptNumber: req.body.receiptNumber, 
+        orderNumber: req.body.orderNumber,
+        movieTitles: req.body.movieTitles,
+        rentDate: req.body.rentDate,
+        returnDate: req.body.returnDate  
+    };
+    rentals.push(rental);
+    res.status(201).send(rentals);
+});
+
+app.get('/rentals', authenticateToken, (req, res) => { //get all rentals
     res.send(rentals);    
 });
 
@@ -250,19 +290,6 @@ app.get('/rentals', authenticateToken, (req, res) => {
         }
         res.json(rentalUser);
     });
-
-app.post('/rentals', (req, res) => {
-    const rentals = { 
-        username: req.body.username, 
-        receiptNumber: req.body.receiptNumber, 
-        orderNumber: req.body.orderNumber,
-        movieTitles: req.body.movieTitles,
-        rentDate: req.body.rentDate,
-        returnDate: req.body.returnDate  
-    };
-    rentals.push(rental);
-    res.status(201).send(rentals);
-});
 
 
 app.put('/rentals', authenticateToken, (req, res) => { 
@@ -303,22 +330,12 @@ app.delete('/rentals', authenticateToken, (req, res) => {
     }
 });
 
+//?????
+// const port = process.env.PORT;
+// console.log("Server listening on port ${PORT}")
+// app.listen(${PORT})
 
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'].split(' ')[1];
-    if (authHeader == null) {
-       return res.sendStatus(401);
-    }
-    jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-       if (err) {
-           console.log(err)
-           return res.sendStatus(403);
-       }
-       req.user = user;
-    
-       next();
-    });
-};
+
 
 console.log("Server listening on port 3000")
 app.listen(3000)
