@@ -58,9 +58,11 @@ const movies = [
            }
         ]
 
-// Next, start your server by running -npm run devStart in your terminal.
+// Next, start your server by running npm run devStart in your terminal.
 // Your server starts running,it will show "server listening on port 3000"
-
+//in terminal run node crypto.js, this will generate the ACCESS_TOKEN_SECRET
+//copy the acesstoken and paste it insinde the .env file that is 
+// set the ACCESS_TOKEN_SECRET environment variable to the secret token in the .env file.
 
 //CREATE ROOT ROUTE +GET REQUEST
 //create a route; root-route. 
@@ -76,18 +78,18 @@ app.get('/', (req, res) => {
 
 //1.generate a salt using bcrypt in the route handler for the post request
 app.post('/usersSignup', async(req, res) => {
-    console.log("I am getting here");
+    // console.log("I am getting here");
     
 
     try {
         let salt;
         let hashedPassword;
         bcrypt.genSalt(2, function(err,ensalt){
-            console.log(ensalt);
+            // console.log(ensalt);
             salt= ensalt;
             
         bcrypt.hash(req.body.password, ensalt, function(err, encrypted){
-                console.log("The hashed password is : " + encrypted);
+                // console.log("The hashed password is : " + encrypted);
                 hashedPassword = encrypted
                 const user = { username: req.body.username, password: hashedPassword };
                 users.push(user);
@@ -96,7 +98,7 @@ app.post('/usersSignup', async(req, res) => {
            
         });
         
-        console.log("This would return : " + hashedPassword)
+        // console.log("This would return : " + hashedPassword)
         
         // console.log(salt);   
     } catch {
@@ -170,7 +172,7 @@ app.post('/usersSignup', async(req, res) => {
         // open another tab and type npm install crypto
         // open a crypto.js file & typpe in: const crypto = require('crypto').randomBytes(64).toString('hex')
         //in terminal run node crypto.js, this will generate the ACCESS_TOKEN_SECRET
-        //copy the acesstoken and paste it insinde the .env file  
+        //copy the acesstoken and paste it insinde the .env file that is 
 // set the ACCESS_TOKEN_SECRET environment variable to the secret token in the .env file.
 // Then back in your index2.js file, return the accessToken as a JSON object in your server. 
 //d. verify token
@@ -181,7 +183,7 @@ app.post('/usersSignup', async(req, res) => {
 //check if user has authorisation/acess
 app.post('/usersLogin', async(req, res) => {
     const user = users.find(user => user.username === req.body.username);
-    console.log("Got to the POST User/LOGIN");
+    // console.log("Got to the POST User/LOGIN");
     if(user == null) {
         return res.status(404).send("User does not exist");
     }
@@ -252,7 +254,7 @@ function authenticateToken(req, res, next) {
 //set the above array to empty after testing or leave it and add new username& password thru postman
 //to freshly enter  username & password i.e create a user that will be added to the empty array(the database)on postman
 
-//YOU CAN POST AS A NORMAL USER(NO PASSWORD COMPARE) OR A LOGGED-IN USER
+//YOU CAN POST AS A NORMAL USER (NO PASSWORD ENCRPT-PLAIN PSWD) OR A LOGGED-IN USER (NO PASSWORD COMPARE)
 app.post('/users', (req, res) => {
     const user = { 
         username: req.body.username, 
@@ -289,18 +291,18 @@ app.get('/users',  authenticateToken, (req, res) => {
 // click on the Send button to send the request--You should get a response of the users object.
 
 //USERS ENDPOINT + GET REQUEST TO SEE A SPECIFIC USER OBJ+ AUTHORISATION using username
- app.get('/users', authenticateToken, (req, res) => {
-    // const {name} = req.user;
-    const username = req.body.username;//i.e username of 1 of the user inside the user array
+//  app.get('/users', authenticateToken, (req, res) => {
+//     // const {name} = req.user;
+//     const username = req.body.username;//i.e username of 1 of the user inside the user array
     
-    // const rentalUser = rentals.filter(rental => rentals.name === name);
-    const userName = users.filter(user => user.username === username);
+//     // const rentalUser = rentals.filter(rental => rentals.name === name);
+//     const userName = users.filter(user => user.username === username);
 
-    if(!userName) {
-        return res.send("Username are not found/allowed");    
-    }
-    res.json(userName);
-});
+//     if(!userName) {
+//         return res.send("Username are not found/allowed");    
+//     }
+//     res.json(userName);
+// });
 
 
 
@@ -491,7 +493,7 @@ app.get('/rentals', authenticateToken, (req, res) => {
         res.json(rentalUser);
     });
 ///TESTING ACCESS TOKEN that will be used along with GET request from differnt routes 
-// To test this code, copy the token returned by the user on postman ???WHERE
+// To test this code, copy the token returned by the user on postman during signin or rental post ???WHERE
 // create a GET request to this route http://localhost:3000/rentals and 
 // in the Headers - key, and in the value, paste the token in the token input box
 // set it to Authorization and select type i.e Bearer Token 
